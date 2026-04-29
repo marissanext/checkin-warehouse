@@ -4,521 +4,105 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Check-In Warehouse</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0f0d;
-    --surface: #111a15;
-    --card: #162019;
-    --border: #1e3326;
-    --accent: #00e87a;
-    --accent-dim: #00e87a22;
-    --accent-mid: #00e87a55;
-    --warn: #ffb830;
-    --warn-dim: #ffb83022;
-    --text: #e8f5ee;
-    --muted: #5a7a65;
-    --danger: #ff4d4d;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'IBM Plex Sans', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 0 40px;
-  }
-
-  /* Header */
-  .header {
-    width: 100%;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .header-icon {
-    width: 36px;
-    height: 36px;
-    background: var(--accent-dim);
-    border: 1px solid var(--accent-mid);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-  }
-
-  .header-title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-  }
-
-  .header-sub {
-    font-size: 11px;
-    color: var(--muted);
-    opacity: 0.6;
-    margin-top: 2px;
-  }
-
-  /* Status badge */
-  .status-bar {
-    width: 100%;
-    max-width: 420px;
-    margin: 20px auto 0;
-    padding: 0 20px;
-  }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .badge.programada {
-    background: var(--warn-dim);
-    border: 1px solid var(--warn);
-    color: var(--warn);
-  }
-
-  .badge.checkin {
-    background: var(--accent-dim);
-    border: 1px solid var(--accent);
-    color: var(--accent);
-  }
-
-  .badge-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  /* Folio */
-  .folio-block {
-    width: 100%;
-    max-width: 420px;
-    padding: 16px 20px 0;
-    margin: 0 auto;
-  }
-
-  .folio-number {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 32px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.02em;
-    line-height: 1;
-  }
-
-  .folio-label {
-    font-size: 11px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-top: 4px;
-  }
-
-  /* Cards */
-  .cards {
-    width: 100%;
-    max-width: 420px;
-    padding: 20px 20px 0;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-  }
-
-  .card-label {
-    font-size: 10px;
-    font-family: 'IBM Plex Mono', monospace;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin-bottom: 6px;
-  }
-
-  .card-value {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.2;
-  }
-
-  .card-value.accent {
-    color: var(--accent);
-    font-family: 'IBM Plex Mono', monospace;
-  }
-
-  .card-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .card-icon {
-    font-size: 20px;
-    margin-bottom: 8px;
-    display: block;
-  }
-
-  /* Divider */
-  .divider {
-    width: 100%;
-    max-width: 420px;
-    margin: 20px auto 0;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .divider-line {
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  .divider-text {
-    font-size: 10px;
-    font-family: 'IBM Plex Mono', monospace;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  /* Check-in button */
-  .actions {
-    width: 100%;
-    max-width: 420px;
-    padding: 20px 20px 0;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .btn-checkin {
-    width: 100%;
-    padding: 18px;
-    background: var(--accent);
-    color: #050f08;
-    border: none;
-    border-radius: 12px;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.2s;
-    letter-spacing: 0.01em;
-  }
-
-  .btn-checkin:hover {
-    background: #00ff88;
-    transform: translateY(-1px);
-  }
-
-  .btn-checkin:active {
-    transform: translateY(0);
-  }
-
-  .btn-checkin:disabled {
-    background: var(--accent-mid);
-    color: var(--bg);
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  .btn-cancel {
-    width: 100%;
-    padding: 14px;
-    background: transparent;
-    color: var(--danger);
-    border: 1px solid #ff4d4d44;
-    border-radius: 12px;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .btn-cancel:hover {
-    background: #ff4d4d11;
-  }
-
-  /* Success state */
-  .success-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    padding: 40px;
-    text-align: center;
-  }
-
-  .success-overlay.show {
-    display: flex;
-    animation: fadeIn 0.4s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-  }
-
-  .success-icon {
-    width: 80px;
-    height: 80px;
-    background: var(--accent-dim);
-    border: 2px solid var(--accent);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 36px;
-    margin-bottom: 24px;
-    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  @keyframes popIn {
-    from { transform: scale(0); }
-    to { transform: scale(1); }
-  }
-
-  .success-title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--accent);
-    margin-bottom: 8px;
-  }
-
-  .success-sub {
-    font-size: 14px;
-    color: var(--muted);
-    margin-bottom: 32px;
-    line-height: 1.6;
-  }
-
-  .success-time {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    color: var(--muted);
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 20px;
-  }
-
-  /* Footer */
-  .footer {
-    width: 100%;
-    max-width: 420px;
-    margin: 28px auto 0;
-    padding: 0 20px;
-    text-align: center;
-  }
-
-  .footer-text {
-    font-size: 11px;
-    color: var(--muted);
-    opacity: 0.5;
-    font-family: 'IBM Plex Mono', monospace;
-  }
-
-  /* Scan indicator — aparece cuando no hay parámetros de URL */
-  .no-data {
-    width: 100%;
-    max-width: 420px;
-    margin: 60px auto 0;
-    padding: 0 20px;
-    text-align: center;
-  }
-
-  .no-data-icon { font-size: 48px; margin-bottom: 16px; }
-  .no-data-title { font-size: 20px; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
-  .no-data-sub { font-size: 13px; color: var(--muted); opacity: 0.6; line-height: 1.6; }
+:root{--bg:#0a0f0d;--surface:#111a15;--card:#162019;--border:#1e3326;--accent:#00e87a;--accent-dim:#00e87a22;--accent-mid:#00e87a55;--warn:#ffb830;--warn-dim:#ffb83022;--text:#e8f5ee;--muted:#5a7a65;--danger:#ff4d4d}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:40px}
+.header{width:100%;background:var(--surface);border-bottom:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;gap:12px}
+.header-icon{width:36px;height:36px;background:var(--accent-dim);border:1px solid var(--accent-mid);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.ht{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.hs{font-size:11px;color:var(--muted);opacity:.6;margin-top:2px}
+.status-bar{width:100%;max-width:420px;margin:20px auto 0;padding:0 20px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.badge.p{background:var(--warn-dim);border:1px solid var(--warn);color:var(--warn)}
+.badge.c{background:var(--accent-dim);border:1px solid var(--accent);color:var(--accent)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.folio{width:100%;max-width:420px;padding:16px 20px 0;margin:0 auto}
+.fn{font-size:32px;font-weight:600;color:var(--text);letter-spacing:-.02em;line-height:1}
+.fl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+.cards{width:100%;max-width:420px;padding:20px 20px 0;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.cl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px}
+.cv{font-size:18px;font-weight:600;color:var(--text);line-height:1.2}
+.cv.a{color:var(--accent)}
+.cr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ci{font-size:20px;margin-bottom:8px;display:block}
+.divider{width:100%;max-width:420px;margin:20px auto 0;padding:0 20px;display:flex;align-items:center;gap:12px}
+.dl{flex:1;height:1px;background:var(--border)}
+.dt{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.actions{width:100%;max-width:420px;padding:20px 20px 0;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.btn-ci{width:100%;padding:18px;background:var(--accent);color:#050f08;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s}
+.btn-ci:disabled{background:var(--accent-mid);color:var(--bg);cursor:not-allowed}
+.btn-rep{width:100%;padding:14px;background:transparent;color:var(--danger);border:1px solid #ff4d4d44;border-radius:12px;font-size:14px;cursor:pointer}
+.overlay{display:none;position:fixed;inset:0;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;z-index:100;padding:40px;text-align:center}
+.overlay.show{display:flex;animation:fi .4s ease}
+@keyframes fi{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.oi{width:80px;height:80px;background:var(--accent-dim);border:2px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:24px}
+.ot{font-size:24px;font-weight:600;color:var(--accent);margin-bottom:8px}
+.os{font-size:14px;color:var(--muted);margin-bottom:32px;line-height:1.6}
+.oti{font-size:13px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 20px}
+.footer{width:100%;max-width:420px;margin:28px auto 0;padding:0 20px;text-align:center;font-size:11px;color:var(--muted);opacity:.5}
 </style>
 </head>
 <body>
-
 <div class="header">
-  <div class="header-icon">🏭</div>
-  <div>
-    <div class="header-title">Tablero Operativo — Warehouse</div>
-    <div class="header-sub">Portal de Check-In</div>
-  </div>
+  <div class="header-icon">&#127981;</div>
+  <div><div class="ht">Tablero Operativo &mdash; Warehouse</div><div class="hs">Portal de Check-In</div></div>
 </div>
-
-<div id="app-content"></div>
-
-<div class="success-overlay" id="success">
-  <div class="success-icon">✓</div>
-  <div class="success-title">Check-In Registrado</div>
-  <div class="success-sub" id="success-msg"></div>
-  <div class="success-time" id="success-time"></div>
+<div id="root"></div>
+<div class="overlay" id="ok">
+  <div class="oi">&#10003;</div>
+  <div class="ot">Check-In Registrado</div>
+  <div class="os" id="ok-msg"></div>
+  <div class="oti" id="ok-time"></div>
 </div>
-
 <script>
-  // Lee parámetros de la URL
-  const params = new URLSearchParams(window.location.search);
-  const po       = params.get('po')           || params.get('cita')  || '';
-  const trans    = params.get('transportista') || '';
-  const placas   = params.get('placas')        || '';
-  const dock     = params.get('dock')          || '';
-  const fecha    = params.get('fecha')         || '';
-  const ventana  = params.get('ventana')       || '';
-  const estado   = params.get('estado')        || 'Programada';
+var p = new URLSearchParams(window.location.search);
+var po = p.get('po') || p.get('cita') || '';
+var tr = p.get('transportista') || '';
+var pl = p.get('placas') || '';
+var dk = p.get('dock') || '';
+var fe = p.get('fecha') || '';
+var ve = p.get('ventana') || '';
+var st = p.get('estado') || 'Programada';
+var root = document.getElementById('root');
 
-  const app = document.getElementById('app-content');
+if (!po) {
+  root.innerHTML = '<div style="padding:40px 20px;text-align:center;color:var(--muted)"><div style="font-size:48px;margin-bottom:16px">&#128241;</div><div style="font-size:20px;font-weight:600;margin-bottom:8px">Escanea el QR de la cita</div><div style="font-size:13px;opacity:.6">Esta pagina se abre al escanear el QR del Tablero Operativo.</div></div>';
+} else {
+  var bc = st.toLowerCase().indexOf('check') >= 0 ? 'c' : 'p';
+  var html = '<div class="status-bar"><span class="badge ' + bc + '"><span class="dot"></span>' + st + '</span></div>';
+  html += '<div class="folio"><div class="fl">Numero de cita</div><div class="fn">' + po + '</div></div>';
+  html += '<div class="cards">';
+  if (tr) html += '<div class="card"><span class="ci">&#128667;</span><div class="cl">Transportista</div><div class="cv">' + tr + '</div></div>';
+  html += '<div class="cr">';
+  if (dk) html += '<div class="card"><span class="ci">&#127981;</span><div class="cl">Dock</div><div class="cv a">' + dk + '</div></div>';
+  if (ve) html += '<div class="card"><span class="ci">&#9200;</span><div class="cl">Horario</div><div class="cv">' + ve + '</div></div>';
+  html += '</div><div class="cr">';
+  if (fe) html += '<div class="card"><span class="ci">&#128197;</span><div class="cl">Fecha</div><div class="cv">' + fe + '</div></div>';
+  if (pl) html += '<div class="card"><span class="ci">&#128663;</span><div class="cl">Placas</div><div class="cv">' + pl + '</div></div>';
+  html += '</div></div>';
+  html += '<div class="divider"><div class="dl"></div><div class="dt">Accion del operador</div><div class="dl"></div></div>';
+  html += '<div class="actions"><button class="btn-ci" id="btn" onclick="chk()">&#10003; &nbsp;Registrar Check-In</button>';
+  html += '<button class="btn-rep" onclick="if(confirm(\'Reportar problema?\'))alert(\'Contacta al coordinador.\')">&#10007; &nbsp;Reportar problema</button></div>';
+  html += '<div class="footer">Tablero Operativo &middot; ' + new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) + '</div>';
+  root.innerHTML = html;
+}
 
-  if (!po) {
-    // Sin datos: modo demo / escaneo directo sin parámetros
-    app.innerHTML = `
-      <div class="no-data">
-        <div class="no-data-icon">📱</div>
-        <div class="no-data-title">Escanea el QR de la cita</div>
-        <div class="no-data-sub">Esta página se abre automáticamente al escanear el código QR generado en el módulo de citas del Tablero Operativo.</div>
-      </div>
-      <div class="cards" style="margin-top:32px">
-        <div class="card" style="border-color:#1e3326aa">
-          <div class="card-label">Vista previa de ejemplo</div>
-          <div class="card-value accent" style="font-size:14px">PO-2024-007 — Envíos Premium</div>
-          <div class="card-label" style="margin-top:8px">Dock A · 12:00–14:00 · 24/04/2026</div>
-        </div>
-      </div>`;
-    return;
-  }
-
-  // Con datos reales
-  const badgeClass = estado.toLowerCase().includes('check') ? 'checkin' : 'programada';
-  const badgeLabel = estado || 'Programada';
-
-  app.innerHTML = `
-    <div class="status-bar">
-      <span class="badge ${badgeClass}">
-        <span class="badge-dot"></span>${badgeLabel}
-      </span>
-    </div>
-
-    <div class="folio-block">
-      <div class="folio-label">Número de cita</div>
-      <div class="folio-number">${po}</div>
-    </div>
-
-    <div class="cards">
-      ${trans ? `
-      <div class="card">
-        <span class="card-icon">🚛</span>
-        <div class="card-label">Transportista</div>
-        <div class="card-value">${trans}</div>
-      </div>` : ''}
-
-      <div class="card-row">
-        ${dock ? `<div class="card">
-          <span class="card-icon">🏭</span>
-          <div class="card-label">Dock</div>
-          <div class="card-value accent">${dock}</div>
-        </div>` : ''}
-        ${ventana ? `<div class="card">
-          <span class="card-icon">⏰</span>
-          <div class="card-label">Horario</div>
-          <div class="card-value">${ventana}</div>
-        </div>` : ''}
-      </div>
-
-      <div class="card-row">
-        ${fecha ? `<div class="card">
-          <span class="card-icon">📅</span>
-          <div class="card-label">Fecha</div>
-          <div class="card-value">${fecha}</div>
-        </div>` : ''}
-        ${placas ? `<div class="card">
-          <span class="card-icon">🚗</span>
-          <div class="card-label">Placas</div>
-          <div class="card-value">${placas}</div>
-        </div>` : ''}
-      </div>
-    </div>
-
-    <div class="divider">
-      <div class="divider-line"></div>
-      <div class="divider-text">Acción del operador</div>
-      <div class="divider-line"></div>
-    </div>
-
-    <div class="actions">
-      <button class="btn-checkin" id="btn-ci" onclick="doCheckIn()">
-        ✓ &nbsp;Registrar Check-In
-      </button>
-      <button class="btn-cancel" onclick="if(confirm('¿Cancelar esta cita?')) alert('Contacta al coordinador para cancelar.')">
-        ✗ &nbsp;Reportar problema
-      </button>
-    </div>
-
-    <div class="footer">
-      <div class="footer-text">Tablero Operativo · ${new Date().toLocaleDateString('es-MX', {day:'2-digit',month:'short',year:'numeric'})}</div>
-    </div>
-  `;
-
-  function doCheckIn() {
-    const btn = document.getElementById('btn-ci');
-    btn.disabled = true;
-    btn.textContent = 'Registrando...';
-
-    setTimeout(() => {
-      const now = new Date();
-      const hora = now.toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'});
-      const dia  = now.toLocaleDateString('es-MX', {weekday:'long', day:'numeric', month:'long'});
-
-      document.getElementById('success-msg').textContent =
-        `La cita ${po}${trans ? ' — ' + trans : ''} ha sido registrada exitosamente.`;
-      document.getElementById('success-time').textContent =
-        `Check-in: ${dia} a las ${hora}`;
-      document.getElementById('success').classList.add('show');
-    }, 800);
-  }
+function chk() {
+  var btn = document.getElementById('btn');
+  btn.disabled = true;
+  btn.textContent = 'Registrando...';
+  setTimeout(function() {
+    var now = new Date();
+    var hora = now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+    var dia = now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
+    document.getElementById('ok-msg').textContent = 'La cita ' + po + (tr ? ' - ' + tr : '') + ' registrada exitosamente.';
+    document.getElementById('ok-time').textContent = 'Check-in: ' + dia + ' a las ' + hora;
+    document.getElementById('ok').classList.add('show');
+  }, 800);
+}
 </script>
 </body>
 </html>
